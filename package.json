@@ -1,0 +1,17 @@
+{
+  "name": "selektor",
+  "version": "1.0.0",
+  "license": "Beerware",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "packageManager": "pnpm@8.6.12",
+  "scripts": {
+    "test": "vitest --watch=false",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.1"
+  }
+}
