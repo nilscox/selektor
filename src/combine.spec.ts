@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 
-import { combine } from './combine';
-import { createSelector } from './create-selector';
+import { combine } from './combine.js';
+import { createSelector } from './create-selector.js';
 
 test('combine', () => {
   const state = {

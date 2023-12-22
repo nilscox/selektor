@@ -1,5 +1,5 @@
-import { Selector, SelectorResult, SelectorParams } from './types';
-import { createSelector } from '.';
+import { Selector, SelectorResult, SelectorParams } from './types.js';
+import { createSelector } from './create-selector.js';
 
 export function combine<
   Inputs extends Selector[],

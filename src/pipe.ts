@@ -1,6 +1,5 @@
-import { Selector, SelectorResult, SelectorParams } from './types';
-
-import { createSelector } from './create-selector';
+import { createSelector } from './create-selector.js';
+import { Selector, SelectorParams, SelectorResult } from './types.js';
 
 type OmitFirst<A extends any[]> = A extends [any, ...infer R] ? R : never;
 
