@@ -43,4 +43,10 @@ describe('pipe', () => {
 
     expect(selectAgeMultipliedBy(state, 0, 1, 2)).toEqual([0, 30, 60]);
   });
+
+  test('memoization', () => {
+    const selectAge = pipe(selectUser, (user) => ({ age: user.age }));
+
+    expect(selectAge(state)).toBe(selectAge(state));
+  });
 });

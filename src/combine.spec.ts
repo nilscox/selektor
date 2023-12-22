@@ -1,20 +1,31 @@
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 import { combine } from './combine.js';
 import { createSelector } from './create-selector.js';
 
-test('combine', () => {
-  const state = {
-    users: { id: 'nilscox' } as Record<string, string>,
-    userId: 'id',
-  };
+describe('combine', () => {
+  test('selectors combinaison', () => {
+    const state = {
+      users: { id: 'nilscox' } as Record<string, string>,
+      userId: 'id',
+    };
 
-  type State = typeof state;
+    type State = typeof state;
 
-  const selectUsers = createSelector((state: State) => state.users);
-  const selectUserId = createSelector((state: State) => state.userId);
+    const selectUsers = createSelector((state: State) => state.users);
+    const selectUserId = createSelector((state: State) => state.userId);
 
-  const result = combine(selectUsers, selectUserId, (users, userId) => users[userId]);
+    const result = combine(selectUsers, selectUserId, (users, userId) => users[userId]);
 
-  expect(result(state)).toEqual('nilscox');
+    expect(result(state)).toEqual('nilscox');
+  });
+
+  test('memoization', () => {
+    const selectA = createSelector(() => ({}));
+    const selectB = createSelector(() => ({}));
+
+    const selector = combine(selectA, selectB, (a, b) => ({ a, b }));
+
+    expect(selector()).toBe(selector());
+  });
 });
