@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+
 import { createSelector } from './create-selector';
 import { pipe } from './pipe';
 
@@ -22,14 +23,22 @@ describe('pipe', () => {
     expect(selectIsOld(state)).toEqual(true);
   });
 
-  test('extra parameters', () => {
+  test('extra parameter', () => {
     const selectIsOlderThan = pipe(selectAge, (age, max: number) => age > max);
 
     expect(selectIsOlderThan(state, 20)).toEqual(true);
   });
 
-  // limitation
-  test.skip('variadic parameters', () => {
+  test('multiple parameters', () => {
+    const selectIsOlderThan = pipe(
+      selectAge,
+      (age, multiplier: number, transform: (value: number) => string) => transform(age * multiplier)
+    );
+
+    expect(selectIsOlderThan(state, 2, String)).toEqual('60');
+  });
+
+  test('variadic parameters', () => {
     const selectAgeMultipliedBy = pipe(selectAge, (age, ...nums: number[]) => nums.map((num) => age * num));
 
     expect(selectAgeMultipliedBy(state, 0, 1, 2)).toEqual([0, 30, 60]);
