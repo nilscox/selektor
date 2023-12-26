@@ -1,7 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import { combine } from './combine.js';
-import { createSelector } from './create-selector.js';
+import { createCombine } from './combine.js';
+import { memoize } from './memoize.js';
+
+const combine = createCombine(memoize);
 
 describe('combine', () => {
   test('selectors combinaison', () => {
@@ -12,8 +14,8 @@ describe('combine', () => {
 
     type State = typeof state;
 
-    const selectUsers = createSelector((state: State) => state.users);
-    const selectUserId = createSelector((state: State) => state.userId);
+    const selectUsers = (state: State) => state.users;
+    const selectUserId = (state: State) => state.userId;
 
     const result = combine(selectUsers, selectUserId, (users, userId) => users[userId]);
 
@@ -31,8 +33,8 @@ describe('combine', () => {
   });
 
   test('memoization', () => {
-    const selectA = createSelector(() => ({}));
-    const selectB = createSelector(() => ({}));
+    const selectA = memoize(() => ({}));
+    const selectB = memoize(() => ({}));
 
     const selector = combine(selectA, selectB, (a, b) => ({ a, b }));
 

@@ -1,16 +1,17 @@
-import { createSelector } from './index.js';
 import { ArraysIntersection } from './type-utils.js';
-import { Selector, SelectorParams, SelectorResult } from './types.js';
+import { Selector, SelectorResult, SelectorParams, CreateSelector } from './types.js';
 
-export function combine<Inputs extends Selector[], Output extends OutputSelector<Inputs, any>>(
-  ...params: [...inputs: Inputs, output: Output]
-): CombineResult<Inputs, Output> {
-  const inputs = params.slice(0, -1) as Inputs;
-  const output = params[params.length - 1] as Output;
+export function createCombine(createSelector: CreateSelector) {
+  return function combine<Inputs extends Selector[], Output extends OutputSelector<Inputs, any>>(
+    ...params: [...inputs: Inputs, output: Output]
+  ): CombineResult<Inputs, Output> {
+    const inputs = params.slice(0, -1) as Inputs;
+    const output = params[params.length - 1] as Output;
 
-  return createSelector((...params) => {
-    return output(...(inputs.map((input) => input(...params)) as SelectorsResults<Inputs>));
-  });
+    return createSelector((...params) => {
+      return output(...(inputs.map((input) => input(...params)) as SelectorsResults<Inputs>));
+    });
+  };
 }
 
 type OutputSelector<Inputs extends Selector[], Result> = Selector<SelectorsResults<Inputs>, Result>;

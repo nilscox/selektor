@@ -1,7 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import { createSelector } from './create-selector';
-import { pipe } from './pipe';
+import { createPipe } from './pipe.js';
+import { memoize } from './memoize.js';
+
+const pipe = createPipe(memoize);
 
 describe('pipe', () => {
   const state = {
@@ -10,7 +12,7 @@ describe('pipe', () => {
 
   type State = typeof state;
 
-  const selectUser = createSelector((state: State) => state.user);
+  const selectUser = memoize((state: State) => state.user);
   const selectAge = pipe(selectUser, (user) => user.age);
 
   test('pipe from base selector', () => {
