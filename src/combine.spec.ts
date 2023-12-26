@@ -20,6 +20,16 @@ describe('combine', () => {
     expect(result(state)).toEqual('nilscox');
   });
 
+  test('with parameters', () => {
+    const result = combine(
+      () => 'a',
+      (b: string) => b,
+      (a, b) => ({ a, b })
+    );
+
+    expect(result('b')).toEqual({ a: 'a', b: 'b' });
+  });
+
   test('memoization', () => {
     const selectA = createSelector(() => ({}));
     const selectB = createSelector(() => ({}));
