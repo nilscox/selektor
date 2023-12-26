@@ -4,28 +4,39 @@ import { combine, createSelector, pipe } from './index.js';
 
 test('readme example', () => {
   const state = {
-    user: {
-      firstName: 'Willie',
-      lastName: 'Martins',
-      age: 42,
-    },
+    todos: [
+      { id: 1, completed: true },
+      { id: 2, completed: false },
+    ],
+    currentTodoId: 2,
   };
 
   type State = typeof state;
 
-  const selectUser = createSelector((state: State) => state.user);
+  // create a memoized selector
+  const selectTodos = createSelector((state: State) => state.todos);
 
-  const selectFirstName = pipe(selectUser, (user) => user.firstName);
-  const selectLastName = pipe(selectUser, (user) => user.lastName);
+  // create a new selector from another selector's output
+  const selectFirstTodo = pipe(selectTodos, (todos) => todos[0]);
 
-  const selectFullName = combine(
-    selectFirstName,
-    selectLastName,
-    (firstName, lastName) => `${firstName} ${lastName}`
+  selectFirstTodo(state); // { id: 1, completed: true }
+  expect(selectFirstTodo(state)).toEqual({ id: 1, completed: true });
+
+  // introduce extra parameters
+  const selectFilteredTodos = pipe(selectTodos, (todos, completed: boolean) => {
+    return todos.filter((todo) => todo.completed === completed);
+  });
+
+  selectFilteredTodos(state, false); // [{ id: 2, completed: false }]
+  expect(selectFilteredTodos(state, false)).toEqual([{ id: 2, completed: false }]);
+
+  const selectCurrentTodoId = createSelector((state) => state.currentTodoId);
+
+  // combine outputs from multiple selectors
+  const selectCurrentTodo = combine(selectTodos, selectCurrentTodoId, (todos, currentTodoId) =>
+    todos.find((todo) => todo.id === currentTodoId)
   );
 
-  const selectIsOld = pipe(selectUser, (user, max: number) => user.age >= max);
-
-  expect(selectFullName(state)).toEqual('Willie Martins');
-  expect(selectIsOld(state, 30)).toEqual(true);
+  selectCurrentTodo(state); // { id: 2, completed: false }
+  expect(selectCurrentTodo(state)).toEqual({ id: 2, completed: false });
 });
