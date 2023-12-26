@@ -1,6 +1,6 @@
 {
   "name": "@nilscox/selektor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "Beerware",
   "type": "module",
   "main": "dist/index.js",
